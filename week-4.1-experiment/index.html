@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <script>
+        function calculateDiv(){
+
+            const principal = document.getElementById("principalAmount").value
+            const rate = document.getElementById("interestRate").value
+            const time = document.getElementById("time").value
+            // const element = document.getElementById("finalSum")
+            // element.innerHTML = parseInt(a) + parseInt(b);
+            fetch("https://sum-server.100xdevs.com/interest?prinipal" + principal + "&rate" + rate + "&time" + time)
+        }
+    </script>
+
+    <body>
+        <input id="principalAmount" type="text" placeholder="Principal Amount"><br></br>
+        <input id="interestRate" type="text" placeholder="Interest Rate"><br></br>
+        <input id="time" type="text" placeholder="Years"><br></br>
+        <button onclick="calculateDiv()"> Calculate Interest </button><br></br>
+        <div id="finalSum"></div>
+
+    </body>
+</html>
