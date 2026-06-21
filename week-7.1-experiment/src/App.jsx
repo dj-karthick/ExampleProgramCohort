@@ -1,37 +1,50 @@
-import { Suspense, lazy} from 'react';
-import { BrowserRouter, Route, Routes, useNavigate } from 'react-router-dom'
-const Dashboard = lazy(()=> import('./components/Dashboard'))
-const LandingPage = lazy(()=> import('./components/LandingPage'))
+import { useContext, useState } from "react";
+import { CountContext } from "./context";
+
+// The problem with passing propsPassing props is a great way to explicitly pipe data 
+// through your UI tree to the components that use it.But passing props can become 
+// verbose and inconvenient when you need to pass some prop deeply through the tree,
+// or if many components need the same prop. The nearest common ancestor could be far
+// removed from the components that need data, and lifting state up that high can
+// lead to a situation called "prop drilling".
 
 function App() {
+  const [count, setCount] = useState(0);
 
   return (
     <>
-      <BrowserRouter>
-        <AppBar></AppBar>
-        <Routes>
-          <Route path='/dashboard' element ={<Suspense fallback={'....loading Dashboard'}>
-            <Dashboard />
-          </Suspense>}></Route>
-          <Route path='/' element={<Suspense fallback={'...loading Landing page'}>
-            <LandingPage />
-          </Suspense>}></Route>
-        </Routes>
-      </BrowserRouter>
+     {/* wrap anyone that wants to use the teleported value inside a provider */}
+      <CountContext.Provider value={{count, setCount}}>
+        <Count ></Count>
+      </CountContext.Provider>
     </>
   )
 }
 
-function AppBar(){
-  const navigate = useNavigate();
+function Count(){
   return <div>
-    <button onClick={()=>{
-      navigate('/');
-    }}>Landing</button>
-    <button onClick={()=>{
-      navigate('/dashboard')
-    }}>Dashboard</button>
+    <CountRenderer ></CountRenderer>
+    <Buttons></Buttons>
   </div>
 }
 
-export default App
+function CountRenderer(){
+  const {count} = useContext(CountContext);
+  return <div>
+    {count}
+  </div>
+}
+
+function Buttons(){
+  const {count, setCount} = useContext(CountContext);
+  return <div>
+    <button onClick={()=>{
+      setCount(count + 1)
+    }}> Increase </button>
+    <button onClick={()=>{
+      setCount(count-1)
+    }}> Decrease </button>
+  </div>
+}
+
+export default App;
