@@ -1,33 +1,22 @@
 import { atom, selector } from "recoil"
 
-export const networkAtom = atom({
-    key: "networkAtom",
-    default: 102
-})
-
-export const notificationAtom = atom({
-    key: "notificationAtom",
-    default: 12
-})
-
-export const jobsAtom = atom({
-    key: "jobAtom",
-    default: 0
-})
-
-export const messagingAtom = atom({
-    key: "messagingAtom",
-    default: 0
+export const notificationAtom = atom({  //This is the wrong approach because values not be hard corded to default
+    key: "notificationAtom",            //it must be fetch from the server and update the current value of atom.
+    default: {                          //so we use asynchronous data query which we will see in further.
+        network: 0,
+        jobs: 0,
+        messaging: 0,
+        notifications: 0
+    }
 })
 
 export const totalNotificationSelector = selector({
     key: "totalNotificationSelector",
     get: ({get}) => {
-        const networkAtomCount = get(networkAtom);
-        const notificationAtomCount = get(notificationAtom);
-        const jobsAtomCount = get(jobsAtom);
-        const messagingAtomCount = get(messagingAtom);
-
-        return networkAtomCount + notificationAtomCount + jobsAtomCount + messagingAtomCount;
+        const allNotifications = get(notificationAtom);
+        return allNotifications.network +
+            allNotifications.jobs +
+            allNotifications.messaging + 
+            allNotifications.notifications
     }
 })
