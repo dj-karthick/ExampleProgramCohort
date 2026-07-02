@@ -12,21 +12,6 @@ export default function App(){
   </RecoilRoot>
 }
 
-function UpdateComponent(){
-  const updateTodo = useSetRecoilState(todoAtomFamily(2));
-  
-  useEffect( () => {
-    setTimeout( () => {
-      updateTodo({
-        id: 3,
-        title: "Go to cycling",
-        description: "Hit the road from 4-6"
-      })
-    }, 5000)
-  }, [])
-
-  return <></>
-}
 
 function Todo({id}){
   const currentTodo = useRecoilValue(todoAtomFamily(id));
