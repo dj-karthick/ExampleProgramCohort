@@ -1,30 +1,47 @@
-import { RecoilRoot, useRecoilState, useRecoilValue } from "recoil";
-import { networkAtom, notificationAtom, totalNotificationSelector } from "./store/atoms/count";
-import { useEffect, useMemo } from "react";
+import { RecoilRoot, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { use, useEffect, useMemo } from "react";
+import { todoAtomFamily } from "./store/atoms/count"
 
 export default function App(){
+
   return <RecoilRoot>
-    <MainApp></MainApp>
+      <UpdateComponent></UpdateComponent>
+      <Todo id = {1} ></Todo>
+      <Todo id = {2} ></Todo>
+      <Todo id = {2} ></Todo>
   </RecoilRoot>
 }
 
-function MainApp(){
-  const [notificationCount,  setNotificationCount] = useRecoilState(notificationAtom);
-  const totalNotificationCount = useRecoilValue(totalNotificationSelector); //Better way to do the ( same operation as useMemo ) by selectors
-
-
-  useEffect(()=> {  //We cant use like this here it needs to be done inside atom thats the better approach.
-    axios.get("https://sum-server.100xdevs.com/notifications")
-      .then( res => setNotificationCount( res.data ))
+function UpdateComponent(){
+  const updateTodo = useSetRecoilState(todoAtomFamily(2));
+  
+  useEffect( () => {
+    setTimeout( () => {
+      updateTodo({
+        id: 3,
+        title: "Go to cycling",
+        description: "Hit the road from 4-6"
+      })
+    }, 5000)
   }, [])
 
-  return <div>
-    <button> Home </button>
-    <button> MyNetwork ({ notificationCount.network >= 100 ? "99+" : notificationCount.network }) </button>
-    <button> Jobs ({ notificationCount.jobs >= 100 ? "99+" : notificationCount.jobs }) </button>
-    <button> Messaging ({ notificationCount.messaging >= 100 ? "99+" : notificationCount.messaging }) </button>
-    <button> Notification ({ notificationCount.notifications >= 100 ? "99+" : notificationCount.notifications }) </button>
+  return <></>
+}
 
-    <button> Me ({ totalNotificationCount}) </button>
+function Todo({id}){
+  const currentTodo = useRecoilValue(todoAtomFamily(id));
+
+  return <div>
+    {currentTodo.id}
+    {currentTodo.title}
+    {currentTodo.description}
   </div>
 }
+
+
+// A component rerenders when any subscribed Recoil value it reads changes.
+// It does not matter whether that change came from an atom or a selector, as long as the component is subscribed to it
+
+//The component subscribes to both the atom and the selector. When the atom updates, 
+//the selector recomputes because it depends on that atom, and React re-renders the 
+//component with the latest atom value and the latest derived selector value, usually in the same render cycle.
