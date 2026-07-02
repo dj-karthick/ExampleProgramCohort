@@ -1,4 +1,4 @@
-import { RecoilRoot, useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
+import { RecoilRoot, useRecoilState, useRecoilStateLoadable, useRecoilValue, useSetRecoilState } from "recoil";
 import { use, useEffect, useMemo } from "react";
 import { todoAtomFamily } from "./store/atoms/count"
 
@@ -14,13 +14,20 @@ export default function App(){
 
 
 function Todo({id}){
-  const currentTodo = useRecoilValue(todoAtomFamily(id));
-
-  return <div>
-    {currentTodo.id}
-    {currentTodo.title}
-    {currentTodo.description}
+  const currentTodo = useRecoilValueLoadable(todoAtomFamily(id));
+  if( currentTodo.state == "loading"){
+    return <div>Loading...</div>
+  }else if( currentTodo.state == "hasValue"){
+    return <div>
+    {currentTodo.contents.id}
+    {currentTodo.contents.title}
+    {currentTodo.contents.description}
   </div>
+  }else if( currentTodo.state == "hasError"){
+    return <div>
+      Error while fetching..
+    </div>
+  }
 }
 
 
