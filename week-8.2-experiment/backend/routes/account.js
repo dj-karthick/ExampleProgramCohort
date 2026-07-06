@@ -1,8 +1,9 @@
-const express = require('express');
-const authMiddleware = require('../middleware/authMiddleware');
+import express from 'express';
+import authMiddleware from '../middleware/authMiddleware.js';
+import { Account } from '../db.js';
+import mongoose from 'mongoose';
+
 const router = express.Router();
-const Account = require('../db');
-const mongoose = require('mongoose');
 
 router.get("/balance", authMiddleware, async (req, res) => {
     const account = await Account.findOne({
@@ -14,7 +15,8 @@ router.get("/balance", authMiddleware, async (req, res) => {
     })
 })
 
-router.post('/transfer', authMiddleware, async () => {          // Making transaction without using MondoDb Transaction.
+
+router.post('/transfer', authMiddleware, async (req, res) => {          // Making transaction without using MondoDb Transaction.
 
     const session = await mongoose.startSession();
 
@@ -65,11 +67,11 @@ router.post('/transfer', authMiddleware, async () => {          // Making transa
     await session.commitTransaction();
 
     res.json({
-        msg: "Transfer successful"
+        message: "Transfer successful"
     })
     
     
 })
 
 
-module.exports = router;
+export default router;

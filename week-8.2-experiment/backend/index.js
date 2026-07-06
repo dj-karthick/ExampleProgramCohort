@@ -1,14 +1,14 @@
-const express = require("express");
+import express from "express";
 const app = express();
-const mainRouter = require('./routes/index');
-const cors = require('cors');
+import mainRouter from './routes/index.js';
+import cors from 'cors';
 
 app.use(cors());
 app.use(express.json());
 
-app.use('api/v1', mainRouter);
+app.use('/api/v1', mainRouter);
 
-app.listen(3000);
+app.listen(3000, () => console.log("Server is running on port: 3000"));
 
 
 

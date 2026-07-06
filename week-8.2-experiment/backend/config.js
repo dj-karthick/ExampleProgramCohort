@@ -1,3 +1,3 @@
 const JWT_SECRET = "Karthick";
 
-module.exports = { JWT_SECRET };
+export { JWT_SECRET };
