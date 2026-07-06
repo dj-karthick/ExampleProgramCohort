@@ -1,11 +1,11 @@
-const express = require('express');
+import express from "express";
 const router = express.Router();
  
-const {User, Account} = require("../db");
-const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("../config");
-const { z } = require("zod");
-const authMiddleware = require("../middleware/authMiddleware");
+import { User, Account } from '../db.js';
+import jwt from 'jsonwebtoken';
+import { JWT_SECRET } from "../config.js";
+import z from "zod";
+import authMiddleware from "../middleware/authMiddleware.js";
 
 const SignUpSchema = z.object({
     userName: z
@@ -59,64 +59,59 @@ const UpdateUserInfoSchema = z.object({
 })
 
 router.post('/signUp', async (req, res) => {
-    const userInfo = req.body;
-    const isValid = SignUpSchema.safeParse(userInfo);
 
-    if(!isValid.success)  return res.status(411).json({msg : "Email already taken /  Incorrect Inputs"});
+    const { success } = SignUpSchema.safeParse(req.body);
 
-    const userName = isValid.data.userName;
-    const password = isValid.data.password;
-    const firstName = isValid.data.firstName;
-    const lastName = isValid.data.lastName;
+    if(!success)  return res.status(411).json({msg : "Email already taken /  Incorrect Inputs"});
 
-    const user = await User.findOne({
-        userName
+    const existingUser = await User.findOne({
+        userName: req.body.userName
     })
 
-    if(!user._id){
-        await User.create({
-        userName,
-        firstName,
-        lastName,
-        password
+    if(existingUser){
+        return res.json({
+            message: "Email already taken / Incorrect inputs"
         })
-
-        const userId = user._id;
-
-        await Account.create({
-            userId,
-            balance: 1 + Math.random() * 1000
-        })
-
-        const token = jwt.sign({
-            userId
-        }, JWT_SECRET)
-
-        res.status(200).json({
-            msg: "User created successfully",
-            token
-        })
-    }else{
-        return res.status(411).json({msg: "User already exists"})
     }
+
+    const user = await User.create({
+        userName: req.body.userName,
+        firstName: req.body.firstName,
+        lastName: req.body.lastName,
+        password: req.body.password
+    }) 
+
+    const userId = user._id;
+
+    await Account.create({
+        userId,
+        balance: 1 + Math.random() * 1000
+    })
+
+    const token = jwt.sign({
+        userId
+    }, JWT_SECRET)
+
+    res.status(200).json({
+        msg: "User created successfully",
+        token
+    })
 
 })
 
 
-router.post('signIn', async () => {
-    const userInfo = req.body;
-    const isValid = SignInSchema.safeParse(userInfo);
+router.post('/signIn', async (req, res) => {
+    
+    const { success } = SignInSchema.safeParse(req.body);
 
-    if(!isValid.success)  return res.status(411).json({msg : "Incorrect username / Password"});
-
-    const userName = isValid.data.userName;
-    const password = isValid.data.password;
+    if(!success )  return res.status(411).json({msg : "Incorrect username / Password"});
 
     const user = await User.findOne({
-        userName
+        userName: req.body.userName,
+        password: req.body.password
     })
 
-    if(!user._id){
+    if(!user){
         return res.status(411).json({msg: "Unable to find user"})
     }
     
@@ -130,21 +125,24 @@ router.post('signIn', async () => {
 
 })
 
-router.put('/', authMiddleware, async () => {
-    const userInfo = req.body;
-    const {success} = UpdateUserInfoSchema.safeParse(userInfo);
+router.put('/', authMiddleware, async (req, res) => {
+
+    const {success} = UpdateUserInfoSchema.safeParse(req.body);
     if(!success) return res.status(404).json({msg: "Error while updating information"});
 
-    await User.updateOne(userInfo, {
-        id: req.userId
-    })
+    const updatedUser = await User.updateOne(
+        { _id: req.userId },
+        { $set: req.body }
+    )
+
+    if(updatedUser.matchedCount == 0) return res.status(404).json({message: "User not found"});
 
     return res.status(200).json({
-        msg: "Updated successfully"
+        message: "Updated successfully"
     })
 })
 
-router.get('/bulk', async () => {
+router.get('/bulk', async (req, res) => {
     const filter = req.query.filter || "";
 
     const users = await User.find({
@@ -170,4 +168,4 @@ router.get('/bulk', async () => {
     })
 })
 
-module.exports = router;
+export default router;
