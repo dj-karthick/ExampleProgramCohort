@@ -28,36 +28,6 @@ const SignUpSchema = z.object({
     .min(3, "Min 3 Chars")
 })
 
-const SignInSchema = z.object({
-    userName: z
-    .string()
-    .email()
-    .min(3, "Min 3 Chars")
-    .max(30, "Max 20 Chars")
-    .transform((val) => val.toLowerCase()),
-
-    password: z
-    .string()
-    .min(3, "Min 3 Chars")
-})
-
-const UpdateUserInfoSchema = z.object({
-    firstName: z
-    .string()
-    .max(30, "Max 20 Chars")
-    .optional(),
-
-    lastName: z
-    .string()
-    .max(30, "Max 20 Chars")
-    .optional(),
-
-    password: z
-    .string()
-    .min(3, "Min 3 Chars")
-    .optional()
-})
-
 router.post('/signUp', async (req, res) => {
 
     const { success } = SignUpSchema.safeParse(req.body);
@@ -99,6 +69,18 @@ router.post('/signUp', async (req, res) => {
 
 })
 
+const SignInSchema = z.object({
+    userName: z
+    .string()
+    .email()
+    .min(3, "Min 3 Chars")
+    .max(30, "Max 20 Chars")
+    .transform((val) => val.toLowerCase()),
+
+    password: z
+    .string()
+    .min(3, "Min 3 Chars")
+})
 
 router.post('/signIn', async (req, res) => {
     
@@ -123,6 +105,23 @@ router.post('/signIn', async (req, res) => {
         token
     })
 
+})
+
+const UpdateUserInfoSchema = z.object({
+    firstName: z
+    .string()
+    .max(30, "Max 20 Chars")
+    .optional(),
+
+    lastName: z
+    .string()
+    .max(30, "Max 20 Chars")
+    .optional(),
+
+    password: z
+    .string()
+    .min(3, "Min 3 Chars")
+    .optional()
 })
 
 router.put('/', authMiddleware, async (req, res) => {
