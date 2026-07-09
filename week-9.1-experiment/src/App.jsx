@@ -13,15 +13,15 @@ function App() {
 }
 
 class MyComponent extends React.component{
-  constructor(props){
-    super(props);
-    this.state = { count: 0}
+  
+  componentDidMount(){
+    console.log("Onmount");
   }
 
-  incrementCount = () => {
-    this.setState({count: this.state.count + 1})
+  componentWillUnmount(){
+    console.log("Unmount");
   }
-
+  
   render() {
     return <div>
       <p> (this.state.count) </p>
