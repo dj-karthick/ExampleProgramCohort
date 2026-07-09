@@ -1,33 +1,50 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import React from 'react'
 import './App.css'
 
+function useTodos(n){
+  const [todos, setTodos] = useState();
+  const [loading, setLoading] = useState(true);
+
+  function getData(){
+    axios.get("http://sum-server.100xdevs.com/todos")
+      .then( res => {
+        setTodos(res.data.todos)
+        setLoading(false)
+      })
+  }
+
+  useEffect(()=>{
+    const value = setInterval(() => {
+      getData();
+    }, n * 1000);
+
+    getData();
+
+    return ()=>{
+      clearInterval(value);
+    }
+  }, [n])
+
+  return {todos, loading}
+}
+
 function App() {
-  const [count, setCount] = useState(0)
+  const {todos, loading} = useTodos();
 
   return (
     <>
-      <MyComponent/>
+    {loading ? "Loading" : todos.map(todo => <Track todo={todo} />) }
     </> 
   )
 }
 
-class MyComponent extends React.component{
-  
-  componentDidMount(){
-    console.log("Onmount");
-  }
+function Track({todo}){
+  return <div>
 
-  componentWillUnmount(){
-    console.log("Unmount");
-  }
-  
-  render() {
-    return <div>
-      <p> (this.state.count) </p>
-      <button onClick={this.incrementCount}>Increment</button>
-    </div>
-  }
+  </div>
 }
+
+
 
 export default App
