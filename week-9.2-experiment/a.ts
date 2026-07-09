@@ -1,6 +1,7 @@
-function isLegal(age: number){
-    if(age > 18) return true;
-    return false;
+function runAfter1S(fn: () => void){
+    setTimeout(fn, 1000);
 }
 
-isLegal(19);
+runAfter1S(()=>{
+    console.log("Hi there")
+});
