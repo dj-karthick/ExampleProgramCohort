@@ -2,29 +2,30 @@ import { use, useEffect, useState } from 'react'
 import React from 'react'
 import './App.css'
 
-function useIsOnline(){
-  const [isOnline, setIsOnline] = useState(window.navigator.onLine);
+function useMousePointer(){
+  const [position, setPosition] = useState({x: 0, y: 0});
+
+  const handleMouse = e => setPosition({x: e.clientX, y: e.clientY})
 
   useEffect(()=>{
-    window.addEventListener('online', ()=>{
-      setIsOnline(true)
-    })
-
-    window.addEventListener('offline', ()=>{
-      setIsOnline(false)
-    })
+    window.addEventListener('mousemove', handleMouse)
+    return ()=>{
+      window.removeEventListener('mousemove', handleMouse)
+    }
   }, [])
 
-  return isOnline
+  return position 
 }
 
 function App() {
   
-  const isOnline = useIsOnline();
+  const mousePointer = useMousePointer();
 
-  if(isOnline) return "Yay, You are online"
+  return <>
+    Your mouse position is {mousePointer.x} {mousePointer.y}
+  </>
 
-  return "You are offline, connect to the internet"
+
 }
 
 
