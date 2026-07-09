@@ -2,27 +2,27 @@ import { use, useEffect, useState } from 'react'
 import React from 'react'
 import './App.css'
 
-function useMousePointer(){
-  const [position, setPosition] = useState({x: 0, y: 0});
-
-  const handleMouse = e => setPosition({x: e.clientX, y: e.clientY})
-
+function useInterval(fn, timeInput){
+  
   useEffect(()=>{
-    window.addEventListener('mousemove', handleMouse)
-    return ()=>{
-      window.removeEventListener('mousemove', handleMouse)
-    }
+    setInterval(() => {
+      fn()
+    }, timeInput);
   }, [])
 
-  return position 
 }
 
 function App() {
   
-  const mousePointer = useMousePointer();
+  const [count, setCount] = useState(0);
+
+  useInterval(()=>{
+    setCount(c => c + 1)
+  }, 1000)
+  
 
   return <>
-    Your mouse position is {mousePointer.x} {mousePointer.y}
+    Timer is at {count}
   </>
 
 
