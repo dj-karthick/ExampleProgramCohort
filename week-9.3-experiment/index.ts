@@ -1,11 +1,14 @@
+// function identify<T>(arg: T): T{
+//     return arg
+// }
 
-// type Input = number | string;
-type Input = number[] | string[];
+// let outPut = identify<string>("Karthick");
 
-function firstEl(arr: Input[]){
-    return arr[0];
+// outPut.toUpperCase(); // We are able to solve the other problem also using Generics
+
+function getFirstElement<T>(arr: T[]){
+    return arr[0]
 }
 
-
-const value = firstEl(["karhtick", "raja", 1, 2, 3]); // You dont want to mixed bagup like this
-console.log(value.toUpperCase());  // This one is problem here, cant able to use toUpperCase func because of typesafety
+const el = getFirstElement<string>(["karthick", "raja", 1, 2]);
+console.log(el.toUpperCase());
