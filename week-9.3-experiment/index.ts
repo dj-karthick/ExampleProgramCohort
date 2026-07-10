@@ -1,12 +1,13 @@
-enum Direction { 
-    Up,
-    Down,
-    Right,
-    Left
+import express from 'express';
+
+const app = express();
+
+enum ResponseStatus { 
+    Success = 200,
+    NotFound = 411,
+    Error = 500
 }
 
-function doSomething(KeyPressed: Direction){
-    if(KeyPressed == Direction.Down) return
-}
-
-doSomething(Direction.Down)
+app.get('/', (req, res)=>{
+    res.status(ResponseStatus.Success).json({})
+})
