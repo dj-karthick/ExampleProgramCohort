@@ -1,13 +1,11 @@
-import express from 'express';
 
-const app = express();
+// type Input = number | string;
+type Input = number[] | string[];
 
-enum ResponseStatus { 
-    Success = 200,
-    NotFound = 411,
-    Error = 500
+function firstEl(arr: Input[]){
+    return arr[0];
 }
 
-app.get('/', (req, res)=>{
-    res.status(ResponseStatus.Success).json({})
-})
+
+const value = firstEl(["karhtick", "raja", 1, 2, 3]); // You dont want to mixed bagup like this
+console.log(value.toUpperCase());  // This one is problem here, cant able to use toUpperCase func because of typesafety
