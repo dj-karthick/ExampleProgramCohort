@@ -20,3 +20,6 @@ async function createUsersTable() {
 }
 
 createUsersTable();
+
+
+// Exersice Link = https://projects.100xdevs.com/tracks/YOSAherHkqWXhOdlE4yE/sql-9
