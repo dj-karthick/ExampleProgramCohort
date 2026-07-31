@@ -1,0 +1,25 @@
+{
+  "name": "week-10.2-experiment",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "module",
+  "devDependencies": {
+    "@types/dotenv": "^6.1.1",
+    "@types/node": "^26.1.2",
+    "dotenv": "^17.4.2",
+    "dotenv-cli": "^11.0.0",
+    "prisma": "^7.9.1",
+    "ts-node": "^10.9.2",
+    "typescript": "^7.0.2"
+  },
+  "dependencies": {
+    "@prisma/client": "^7.9.1"
+  }
+}
