@@ -12,7 +12,7 @@ app.post('/', async (c) => {
   console.log(c.req.header("Authorization"));
   console.log(c.req.query("param"));
 
-  
+  //Added the link to slides of this class serverless function - https://projects.100xdevs.com/tracks/eooSv7lnuwBO6wl9YA5w/serverless-3
   return c.text('Hello Hono!')
 })
 
